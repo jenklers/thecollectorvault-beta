@@ -108,12 +108,12 @@
           <p id="authSubheadingText" class="text-xs text-slate-400 mt-1">Sign in to view and synchronize your vault</p>
         </div>
 
-        <form id="formAuth" class="space-y-4">
+        <form id="formAuth" class="space-y-4" autocomplete="off">
           <div>
             <label class="block text-xs font-semibold text-slate-300 mb-1">Email Address</label>
             <div class="relative">
               <i data-lucide="mail" class="w-4 h-4 text-slate-500 absolute left-3.5 top-3"></i>
-              <input type="email" id="authEmail" required placeholder="collector@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-3 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 transition-colors">
+              <input type="email" id="authEmail" required autocomplete="off" placeholder="collector@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-3 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 transition-colors">
             </div>
           </div>
 
@@ -121,7 +121,7 @@
             <label class="block text-xs font-semibold text-slate-300 mb-1">Password</label>
             <div class="relative">
               <i data-lucide="lock" class="w-4 h-4 text-slate-500 absolute left-3.5 top-3"></i>
-              <input type="password" id="authPassword" required minlength="6" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-3 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 transition-colors">
+              <input type="password" id="authPassword" required minlength="6" autocomplete="new-password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-3 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 transition-colors">
             </div>
           </div>
 
@@ -606,12 +606,16 @@ const firebaseConfig = {
           <input type="text" id="drawerInputTitle" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-sky-500">
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
           <div>
             <label class="block text-[11px] font-semibold text-slate-300 mb-1">Series / Line</label>
             <input type="text" id="drawerInputSeries" placeholder="e.g. G.I. Joe - ReAction+" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-sky-500">
           </div>
           <div>
+            <label class="block text-[11px] font-semibold text-slate-300 mb-1">Variant / Chase</label>
+            <input type="text" id="drawerInputVariant" placeholder="e.g. Camo, Chase, Gold Foil" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-sky-500">
+          </div>
+          <div class="col-span-2 sm:col-span-1">
             <label class="block text-[11px] font-semibold text-slate-300 mb-1">Manufacturer</label>
             <input type="text" id="drawerInputManufacturer" placeholder="e.g. Super7, Hasbro" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-sky-500">
           </div>
@@ -1348,6 +1352,15 @@ const firebaseConfig = {
         if (unsubscribeVaultListener) unsubscribeVaultListener();
         vaultItems = [];
         topValuedItem = null;
+
+        // Clear email, password, and reset the auth form fields
+        const authForm = document.getElementById("formAuth");
+        if (authForm) authForm.reset();
+        const emailInput = document.getElementById("authEmail");
+        const passwordInput = document.getElementById("authPassword");
+        if (emailInput) emailInput.value = "";
+        if (passwordInput) passwordInput.value = "";
+
         viewAuth.classList.remove("hidden");
         viewAdmin.classList.add("hidden");
         viewCollector.classList.add("hidden");
@@ -1652,21 +1665,31 @@ const firebaseConfig = {
       const query = (document.getElementById("inputSearch")?.value || "").toLowerCase().trim();
       const cat = document.getElementById("selectCategory")?.value || "ALL";
 
-      const titleCounts = {};
+      // Helper to compute a distinct item signature including title, series, and variant
+      const getItemKey = (item) => {
+        const t = (item.title || "").toLowerCase().trim();
+        const s = (item.series || "").toLowerCase().trim();
+        const v = (item.variant || "standard").toLowerCase().trim();
+        return `${t}||${s}||${v}`;
+      };
+
+      const itemKeyCounts = {};
       vaultItems.forEach(i => {
-        const norm = (i.title || "").toLowerCase().trim();
-        if (norm) titleCounts[norm] = (titleCounts[norm] || 0) + 1;
+        const k = getItemKey(i);
+        if (k) itemKeyCounts[k] = (itemKeyCounts[k] || 0) + 1;
       });
 
       const filtered = vaultItems.filter(item => {
         const normTitle = (item.title || "").toLowerCase().trim();
         const normSeries = (item.series || "").toLowerCase().trim();
+        const normVariant = (item.variant || "").toLowerCase().trim();
         const normMfr = (item.manufacturer || "").toLowerCase().trim();
+        const key = getItemKey(item);
 
-        if (filterDuplicatesOnly && (titleCounts[normTitle] || 0) < 2) return false;
+        if (filterDuplicatesOnly && (itemKeyCounts[key] || 0) < 2) return false;
         if (cat !== "ALL" && (item.series || "").trim() !== cat) return false;
         if (query) {
-          return normTitle.includes(query) || normSeries.includes(query) || normMfr.includes(query);
+          return normTitle.includes(query) || normSeries.includes(query) || normVariant.includes(query) || normMfr.includes(query);
         }
         return true;
       });
@@ -1725,7 +1748,8 @@ const firebaseConfig = {
       let html = "";
 
       filtered.forEach(item => {
-        const hasDup = (titleCounts[(item.title || "").toLowerCase().trim()] || 0) > 1;
+        const key = getItemKey(item);
+        const hasDup = (itemKeyCounts[key] || 0) > 1;
         const valFormatted = getItemValue(item).toFixed(2);
 
         html += `
@@ -1737,7 +1761,10 @@ const firebaseConfig = {
             </div>
 
             <div class="space-y-1">
-              <span class="text-[10px] font-mono text-sky-400 block truncate uppercase">${item.series || 'Collectible'}</span>
+              <div class="flex items-center justify-between gap-1">
+                <span class="text-[10px] font-mono text-sky-400 block truncate uppercase">${item.series || 'Collectible'}</span>
+                ${item.variant && item.variant.trim() !== '' ? `<span class="text-[9px] font-mono font-semibold px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 truncate max-w-[90px]" title="Variant: ${item.variant}">${item.variant}</span>` : ''}
+              </div>
               <h4 class="text-xs font-bold text-white truncate group-hover:text-sky-300 transition-colors">${item.title || 'Untitled'}</h4>
               <div class="flex items-center justify-between pt-1">
                 <span class="text-xs font-black font-mono text-emerald-400">$${valFormatted}</span>
@@ -1770,6 +1797,7 @@ const firebaseConfig = {
 
       const tInput = document.getElementById("drawerInputTitle");
       const sInput = document.getElementById("drawerInputSeries");
+      const vntInput = document.getElementById("drawerInputVariant");
       const mInput = document.getElementById("drawerInputManufacturer");
       const yInput = document.getElementById("drawerInputYear");
       const cSelect = document.getElementById("drawerSelectCondition");
@@ -1785,6 +1813,7 @@ const firebaseConfig = {
         previewImg.src = item.image || "";
         tInput.value = item.title || "";
         sInput.value = item.series || "";
+        if (vntInput) vntInput.value = item.variant || "";
         mInput.value = item.manufacturer || "";
         yInput.value = item.year || "";
         cSelect.value = item.condition || "MOC / Carded";
@@ -1803,6 +1832,7 @@ const firebaseConfig = {
         previewImg.src = capturedImage || "";
         tInput.value = aiData?.title || "";
         sInput.value = aiData?.series || "";
+        if (vntInput) vntInput.value = aiData?.variant || "";
         mInput.value = aiData?.manufacturer || "";
         yInput.value = aiData?.year || "";
         cSelect.value = aiData?.condition || "MOC / Carded";
@@ -1835,6 +1865,7 @@ const firebaseConfig = {
       const itemPayload = {
         title: document.getElementById("drawerInputTitle").value.trim(),
         series: document.getElementById("drawerInputSeries").value.trim(),
+        variant: (document.getElementById("drawerInputVariant")?.value || "").trim(),
         manufacturer: document.getElementById("drawerInputManufacturer").value.trim(),
         year: document.getElementById("drawerInputYear").value.trim(),
         condition: document.getElementById("drawerSelectCondition").value,
@@ -1898,17 +1929,19 @@ const firebaseConfig = {
 Detect and extract:
 1. Title / Character Name
 2. Toy Line or Series. CRITICAL: For Super7 action figures, check packaging for "+" or "Plus" badges and modern O-ring articulation. If present, standardise series to "[Franchise] - ReAction+" (e.g. "G.I. Joe - ReAction+").
-3. Manufacturer (e.g. Super7, Hasbro, Mattel, Kenner).
-4. Release Year.
-5. Estimated Value in USD (numeric only).
-6. Category (Action Figures, Comics, Cards, Statues).
-7. Condition (MOC / Carded, Mint in Box (MIB), Loose Complete).
-8. Collector Notes: note cardback details, articulation, punch status.
+3. Variant / Chase (e.g., Camo Variant, Chase, Gold Trim, Glow in the Dark, Foil Cardback, Unpunched, Regular). If none, leave as empty string or "Standard".
+4. Manufacturer (e.g. Super7, Hasbro, Mattel, Kenner).
+5. Release Year.
+6. Estimated Value in USD (numeric only).
+7. Category (Action Figures, Comics, Cards, Statues).
+8. Condition (MOC / Carded, Mint in Box (MIB), Loose Complete).
+9. Collector Notes: note cardback details, articulation, punch status.
 
 Return ONLY a valid JSON object matching:
 {
   "title": "Snake Eyes",
   "series": "G.I. Joe - ReAction+",
+  "variant": "Standard",
   "manufacturer": "Super7",
   "year": "2024",
   "estValue": 25.00,
@@ -1975,6 +2008,7 @@ Return ONLY a valid JSON object matching:
           if (result) {
             if (result.title) document.getElementById("drawerInputTitle").value = result.title;
             if (result.series) document.getElementById("drawerInputSeries").value = result.series;
+            if (result.variant && document.getElementById("drawerInputVariant")) document.getElementById("drawerInputVariant").value = result.variant;
             if (result.manufacturer) document.getElementById("drawerInputManufacturer").value = result.manufacturer;
             if (result.year) document.getElementById("drawerInputYear").value = result.year;
             if (result.condition) document.getElementById("drawerSelectCondition").value = result.condition;
@@ -2063,6 +2097,7 @@ Return ONLY a valid JSON object matching:
 Current Item Information:
 - Title / Character: "${item.title || ''}"
 - Series / Line: "${item.series || ''}"
+- Variant: "${item.variant || ''}"
 - Manufacturer: "${item.manufacturer || ''}"
 - Release Year: "${item.year || ''}"
 - Condition: "${item.condition || 'MOC / Carded'}"
@@ -2072,12 +2107,14 @@ Evaluate current collector market pricing (eBay sold comps, action figure price 
 CRITICAL:
 1. Provide an updated, realistic USD estimate for 'estValue' (numeric number only, e.g. 25.00).
 2. If this is a Super7 figure, verify whether it belongs to the "ReAction+" modern O-ring articulated line and format the series accurately as "[Franchise] - ReAction+" (e.g. "G.I. Joe - ReAction+").
-3. Enrich the notes with helpful collector details, articulation notes, accessories, or cardback variants.
+3. Identify or preserve any specific Variant/Chase information (e.g. "Chase", "Black & White", "Standard").
+4. Enrich the notes with helpful collector details, articulation notes, accessories, or cardback variants.
 
 Return ONLY a valid JSON object matching:
 {
   "title": "${item.title || ''}",
   "series": "Updated or verified series",
+  "variant": "${item.variant || 'Standard'}",
   "manufacturer": "Super7, Hasbro, etc.",
   "year": "2024",
   "estValue": 25.00,
@@ -2151,6 +2188,7 @@ Return ONLY a valid JSON object matching:
 
         if (refreshed.title) document.getElementById("drawerInputTitle").value = refreshed.title;
         if (refreshed.series) document.getElementById("drawerInputSeries").value = refreshed.series;
+        if (refreshed.variant && document.getElementById("drawerInputVariant")) document.getElementById("drawerInputVariant").value = refreshed.variant;
         if (refreshed.manufacturer) document.getElementById("drawerInputManufacturer").value = refreshed.manufacturer;
         if (refreshed.year) document.getElementById("drawerInputYear").value = refreshed.year;
         if (refreshed.condition) document.getElementById("drawerSelectCondition").value = refreshed.condition;
@@ -2236,6 +2274,9 @@ Return ONLY a valid JSON object matching:
           }
           if (refreshed.series && refreshed.series !== item.series) {
             updates.series = refreshed.series;
+          }
+          if (refreshed.variant && refreshed.variant !== item.variant) {
+            updates.variant = refreshed.variant;
           }
           if (refreshed.notes && refreshed.notes !== item.notes) {
             updates.notes = refreshed.notes;
@@ -2653,9 +2694,14 @@ Return ONLY a valid JSON object matching:
       document.getElementById("btnCloseUserSettings")?.addEventListener("click", () => {
         document.getElementById("modalUserSettings").classList.add("hidden");
       });
-      document.getElementById("btnUserSettingsSignOut")?.addEventListener("click", () => {
+      document.getElementById("btnUserSettingsSignOut")?.addEventListener("click", async () => {
         document.getElementById("modalUserSettings").classList.add("hidden");
-        signOut(auth);
+        const emailInput = document.getElementById("authEmail");
+        const passwordInput = document.getElementById("authPassword");
+        if (emailInput) emailInput.value = "";
+        if (passwordInput) passwordInput.value = "";
+        await signOut(auth);
+        showToast("Signed out successfully", "info");
       });
       document.getElementById("btnRunTaxonomyNormalizer")?.addEventListener("click", runTaxonomyNormalizer);
 
@@ -2681,10 +2727,11 @@ Return ONLY a valid JSON object matching:
       // CSV Export
       document.getElementById("btnExportCsv")?.addEventListener("click", () => {
         if (vaultItems.length === 0) return showToast("No items to export", "warning");
-        const headers = ["Title", "Series", "Manufacturer", "Year", "Condition", "EstValue", "Notes"];
+        const headers = ["Title", "Series", "Variant", "Manufacturer", "Year", "Condition", "EstValue", "Notes"];
         const rows = vaultItems.map(i => [
           `"${(i.title || '').replace(/"/g, '""')}"`,
           `"${(i.series || '').replace(/"/g, '""')}"`,
+          `"${(i.variant || '').replace(/"/g, '""')}"`,
           `"${(i.manufacturer || '').replace(/"/g, '""')}"`,
           `"${i.year || ''}"`,
           `"${i.condition || ''}"`,
@@ -2745,6 +2792,7 @@ Return ONLY a valid JSON object matching:
               const payload = {
                 title: item.title || "Untitled Collectible",
                 series: item.series || "",
+                variant: item.variant || "",
                 manufacturer: item.manufacturer || "",
                 year: item.year || "",
                 condition: item.condition || "MOC / Carded",
