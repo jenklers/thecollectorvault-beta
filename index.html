@@ -5,6 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>TheCollectorVault - AI Collectibles & Valuation Engine</title>
   
+  <!-- Web App & Mobile Meta Tags -->
+  <meta name="application-name" content="TheCollectorVault">
+  <meta name="apple-mobile-web-app-title" content="TheCollectorVault">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#020617">
+
+  <!-- Branded High-Res SVG Icon matching Login Shield -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%230ea5e9'/%3E%3Cstop offset='100%25' stop-color='%234f46e5'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='128' fill='%23020617'/%3E%3Crect x='40' y='40' width='432' height='432' rx='96' fill='url(%23g)'/%3E%3Cpath d='M256 120 C190 120 160 160 160 250 C160 340 256 390 256 390 C256 390 352 340 352 250 C352 160 322 120 256 120 Z' fill='%23020617' opacity='0.25'/%3E%3Cpath d='M256 130 C198 130 172 166 172 246 C172 328 256 374 256 374 C256 374 340 328 340 246 C340 166 314 130 256 130 Z' fill='none' stroke='white' stroke-width='24' stroke-linejoin='round'/%3E%3Cpath d='M220 250 L245 275 L300 215' fill='none' stroke='white' stroke-width='26' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%230ea5e9'/%3E%3Cstop offset='100%25' stop-color='%234f46e5'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='128' fill='%23020617'/%3E%3Crect x='40' y='40' width='432' height='432' rx='96' fill='url(%23g)'/%3E%3Cpath d='M256 130 C198 130 172 166 172 246 C172 328 256 374 256 374 C256 374 340 328 340 246 C340 166 314 130 256 130 Z' fill='none' stroke='white' stroke-width='24' stroke-linejoin='round'/%3E%3Cpath d='M220 250 L245 275 L300 215' fill='none' stroke='white' stroke-width='26' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+
+  <!-- Embedded Web App Manifest -->
+  <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjoiVGhlQ29sbGVjdG9yVmF1bHQiLCJzaG9ydF9uYW1lIjoiQ29sbGVjdG9yVmF1bHQiLCJzdGFydF91cmwiOiIuLyIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMwMjA2MTciLCJ0aGVtZV9jb2xvciI6IiMwMjA2MTciLCJpY29ucyI6W3sic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sLCUzQ3N2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCA1MTIgNTEyJyUzRSUzQ2RlZnMlM0UlM0NsaW5lYXJHYXJkaWVudCBpZD0nZycgeDE9JzAlMjUnIHkxPScwJTI1JyB4Mj0nMTAwJTI1JyB5Mj0nMTAwJTI1JyUzRSUzQ3N0b3Agb2Zmc2V0PScwJTI1JyBzdG9wLWNvbG9yPSclMjMwZWE1ZTknLyUzRSUzQ3N0b3Agb2Zmc2V0PScxMDAlMjUnIHN0b3AtY29sb3I9JyUyMzRmNDZlNScvJTNFJTNDL2xpbmVhckdyYWRpZW50JTNFJTNDL2RlZnMlM0UlM0NyZWN0IHdpZHRoPSc1MTInIGhlaWdodD0nNTEyJyByeD0nMTI4JyBmaWxsPSclMjMwMjA2MTcnLyUzRSUzQ3JlY3QgeD0nNDAnIHk9JzQwJyB3aWR0aD0nNDMyJyBoZWlnaHQ9JzQzMicgcng9Jzk2JyBmaWxsPSd1cmwoJTIzZyknLyUzRSUzQ3BhdGggZD0nTTI1NiAxMzAgQzE5OCAxMzAgMTcyIDE2NiAxNzIgMjQ2IEMxNzIgMzI4IDI1NiAzNzQgMjU2IDM3NCBDMjU2IDM3NCAzNDAgMzI4IDM0MCAyNDYgQzM0MCAxNjYgMzE0IDEzMCAyNTYgMTMwIFonIGZpbGw9J25vbmUnIHN0cm9rZT0nd2hpdGUnIHN0cm9rZS13aWR0aD0nMjQnIHN0cm9rZS1saW5lam9pbj0ncm91bmQnLyUzRSUzQ3BhdGggZD0nTTIyMCAyNTAgTDI0NSAyNzUgTDMwMCAyMTUnIGZpbGw9J25vbmUnIHN0cm9rZT0nd2hpdGUnIHN0cm9rZS13aWR0aD0nMjYnIHN0cm9rZS1saW5lY2FwPSdyb3VuZCcgc3Ryb2tlLWxpbmVqb2luPSdyb3VuZCcvJTNFJTNDL3N2ZyUzRSIsInNpemVzIjoiNTEyeDUxMiIsInR5cGUiOiJpbWFnZS9zdmcreG1sIiwicHVycG9zZSI6ImFueSBtYXNrYWJsZSJ9XX0=">
+
   <!-- Inter Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -42,6 +57,69 @@
 </head>
 
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-sky-500/30 selection:text-sky-200">
+
+  <!-- ================= PWA MOBILE INSTALL BANNER ================= -->
+  <div id="pwaInstallBanner" class="hidden z-50 bg-gradient-to-r from-sky-950/90 via-indigo-950/90 to-slate-950 border-b border-sky-500/30 px-3.5 py-2.5 backdrop-blur-md transition-all">
+    <div class="max-w-6xl mx-auto flex items-center justify-between gap-2.5">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center shadow-md shadow-sky-500/20 shrink-0">
+          <i data-lucide="shield-check" class="w-4 h-4 text-white"></i>
+        </div>
+        <div class="min-w-0">
+          <div class="text-xs font-bold text-white truncate">Install TheCollectorVault</div>
+          <div id="pwaBannerSubtitle" class="text-[10px] text-sky-300/80 truncate">Install on home screen for full-screen camera & quick access</div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-1.5 shrink-0">
+        <button type="button" id="btnPwaInstallAction" class="px-3 py-1.5 rounded-lg bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-[11px] shadow-md shadow-sky-500/20 transition-all flex items-center gap-1">
+          <i data-lucide="download" class="w-3.5 h-3.5"></i>
+          <span>Install</span>
+        </button>
+        <button type="button" id="btnDismissPwaBanner" class="p-1.5 rounded-lg text-slate-400 hover:text-white transition-colors" title="Dismiss">
+          <i data-lucide="x" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- iOS Safari Add to Home Screen Instructions Modal -->
+  <div id="modalIosInstallGuide" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-sm w-full p-5 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+        <div class="flex items-center gap-2 text-white font-bold text-sm">
+          <div class="w-7 h-7 rounded-lg bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center">
+            <i data-lucide="shield-check" class="w-4 h-4 text-white"></i>
+          </div>
+          <span>Install on iPhone / iPad</span>
+        </div>
+        <button id="btnCloseIosGuide" class="p-1 rounded-full text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <p class="text-xs text-slate-300">To add TheCollectorVault with the app icon to your home screen:</p>
+
+      <ol class="space-y-3 text-xs text-slate-300">
+        <li class="flex items-start gap-2.5">
+          <span class="w-5 h-5 rounded-full bg-slate-800 text-sky-400 font-bold flex items-center justify-center shrink-0 text-[11px]">1</span>
+          <span>Tap the <strong class="text-white">Share</strong> button <i data-lucide="share" class="w-3.5 h-3.5 inline text-sky-400 mx-0.5"></i> at the bottom of Safari.</span>
+        </li>
+        <li class="flex items-start gap-2.5">
+          <span class="w-5 h-5 rounded-full bg-slate-800 text-sky-400 font-bold flex items-center justify-center shrink-0 text-[11px]">2</span>
+          <span>Scroll down and tap <strong class="text-white">"Add to Home Screen"</strong> <i data-lucide="plus-square" class="w-3.5 h-3.5 inline text-sky-400 mx-0.5"></i>.</span>
+        </li>
+        <li class="flex items-start gap-2.5">
+          <span class="w-5 h-5 rounded-full bg-slate-800 text-sky-400 font-bold flex items-center justify-center shrink-0 text-[11px]">3</span>
+          <span>Tap <strong class="text-white">Add</strong> in the top-right corner.</span>
+        </li>
+      </ol>
+
+      <button type="button" id="btnDismissIosGuide" class="w-full py-2 rounded-xl bg-sky-500 text-slate-950 font-bold text-xs shadow-md shadow-sky-500/20">
+        Got It
+      </button>
+    </div>
+  </div>
 
   <!-- ================= TOP NAVIGATION BAR ================= -->
   <header class="sticky top-0 z-40 bg-slate-950/85 backdrop-blur-md border-b border-slate-800/80 px-4 py-2.5 sm:py-3">
@@ -908,6 +986,23 @@ const firebaseConfig = {
           <button type="button" id="btnSettingsEmailSupport" class="px-4 py-2 rounded-xl bg-sky-500/10 hover:bg-sky-500/20 text-sky-300 border border-sky-500/30 font-semibold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer self-start sm:self-auto">
             <i data-lucide="mail" class="w-4 h-4"></i>
             <span>Contact Support</span>
+          </button>
+        </div>
+
+        <!-- Add to Home Screen / Install Button in Settings -->
+        <div id="settingsPwaCard" class="p-4 bg-slate-900 sm:bg-slate-950/80 rounded-2xl border border-sky-500/30 shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center shadow-md shadow-sky-500/20 shrink-0">
+              <i data-lucide="smartphone" class="w-4 h-4 text-white"></i>
+            </div>
+            <div>
+              <div class="font-semibold text-white sm:text-sm">Mobile App Experience</div>
+              <div class="text-[11px] text-slate-400 mt-0.5">Install on your home screen for full-screen camera and fast access</div>
+            </div>
+          </div>
+          <button type="button" id="btnSettingsInstallPwa" class="px-4 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-md shadow-sky-500/20 self-start sm:self-auto cursor-pointer">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+            <span>Install App</span>
           </button>
         </div>
 
@@ -3001,6 +3096,87 @@ Return ONLY a valid JSON object matching:
 
       lucide.createIcons();
     });
+
+    // ================= PROGRESSIVE WEB APP (PWA) INSTALL LOGIC & SERVICE WORKER =================
+    let deferredInstallPrompt = null;
+    const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+    // Register a lightweight in-memory Service Worker to meet PWA criteria
+    if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost')) {
+      const swCode = `
+        const CACHE_NAME = 'collector-vault-v1';
+        self.addEventListener('install', (e) => self.skipWaiting());
+        self.addEventListener('activate', (e) => e.waitUntil(clients.claim()));
+        self.addEventListener('fetch', (e) => {
+          // Pass-through for real-time Firestore requests
+          e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
+        });
+      `;
+      const blob = new Blob([swCode], { type: 'application/javascript' });
+      const swUrl = URL.createObjectURL(blob);
+      navigator.serviceWorker.register(swUrl).catch(e => console.warn('SW registration skipped:', e));
+    }
+
+    const pwaBanner = document.getElementById("pwaInstallBanner");
+    const btnPwaAction = document.getElementById("btnPwaInstallAction");
+    const btnDismissBanner = document.getElementById("btnDismissPwaBanner");
+    const btnSettingsInstall = document.getElementById("btnSettingsInstallPwa");
+    const modalIos = document.getElementById("modalIosInstallGuide");
+    const btnCloseIos = document.getElementById("btnCloseIosGuide");
+    const btnDismissIos = document.getElementById("btnDismissIosGuide");
+
+    function showInstallPromptOrGuide() {
+      if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        deferredInstallPrompt.userChoice.then((choice) => {
+          if (choice.outcome === 'accepted') {
+            showToast("Installing TheCollectorVault...", "success");
+            pwaBanner?.classList.add("hidden");
+          }
+          deferredInstallPrompt = null;
+        });
+      } else if (isIos) {
+        modalIos?.classList.remove("hidden");
+        lucide.createIcons();
+      } else {
+        showToast("Open your browser menu (⋮) and tap 'Add to Home screen' or 'Install App'", "info");
+      }
+    }
+
+    // Android / Chromium beforeinstallprompt event
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+      if (!isStandalone && !localStorage.getItem("pwa_banner_dismissed")) {
+        pwaBanner?.classList.remove("hidden");
+        lucide.createIcons();
+      }
+    });
+
+    // Check on startup if running in standalone mode
+    window.addEventListener('load', () => {
+      if (!isStandalone && !localStorage.getItem("pwa_banner_dismissed")) {
+        // Show banner for mobile iOS as well
+        if (isIos) {
+          const sub = document.getElementById("pwaBannerSubtitle");
+          if (sub) sub.textContent = "Tap to add to your Home Screen with custom icon";
+          pwaBanner?.classList.remove("hidden");
+          lucide.createIcons();
+        }
+      }
+    });
+
+    btnPwaAction?.addEventListener("click", showInstallPromptOrGuide);
+    btnSettingsInstall?.addEventListener("click", showInstallPromptOrGuide);
+
+    btnDismissBanner?.addEventListener("click", () => {
+      pwaBanner?.classList.add("hidden");
+      localStorage.setItem("pwa_banner_dismissed", "true");
+    });
+
+    btnCloseIos?.addEventListener("click", () => modalIos?.classList.add("hidden"));
+    btnDismissIos?.addEventListener("click", () => modalIos?.classList.add("hidden"));
   </script>
 </body>
 </html>
